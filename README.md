@@ -24,6 +24,16 @@ class TwiCastingAPI(
 )
 ```
 
+### Methods
+```python
+def get_user_info(self, user_id: str) -> TwiCastingUserInfo
+```
+
+```python
+def get_movie_info(self, movie_id: str) -> TwiCastingMovieInfo
+```
+
+## DataClass
 ```python
 @dataclass
 class TwiCastingUserInfo():
@@ -68,11 +78,3 @@ class TwiCastingMovieInfo():
     tags: list[str]
 ```
 
-## Methods
-```python
-def get_user_info(self, user_id: str) -> TwiCastingUserInfo
-```
-
-```python
-def get_movie_info(self, movie_id: str) -> TwiCastingMovieInfo
-```
