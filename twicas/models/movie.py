@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from TwiCastingModel.user import TwiCastingUserInfo
+from twicas.models.user import TwiCastingUserInfo
 
 @dataclass
 class TwiCastingMovieInfo():
