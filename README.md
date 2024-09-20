@@ -1,6 +1,10 @@
 # Unofficial TwiCasting API
 
 ## Usage
+```bash
+$ pip install git+https://github.com/Dotinkasra/TwiCastingAPI
+```
+
 ```python
 from twicas import TwiCastingAPI, TwiCastingUserInfo, TwiCastingMovieInfo
 
