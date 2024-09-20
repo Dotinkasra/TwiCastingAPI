@@ -1,3 +1,5 @@
 .DS_Store
 .spotlight
 venv
+build
+*.egg-info
