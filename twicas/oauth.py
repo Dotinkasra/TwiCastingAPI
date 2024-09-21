@@ -1,4 +1,6 @@
 from twicas.models.access_token import TwiCastingAccessToken
+from twicas.errors.twicasting_exceptions import *
+from twicas.module import TwiCastingModule
 
 from requests_oauthlib import OAuth2Session
 import pickle, requests, pathlib, os
@@ -28,6 +30,7 @@ class TwiCastingOAuth:
             "redirect_uri": self._redirect_uri
         }
         response = requests.post(TOKEN_URL, data= parameters).json()
+        TwiCastingModule.response_validation(response)
 
         access_token = TwiCastingAccessToken(expires_in=response["expires_in"], access_token=response["access_token"])
         self.save_token(access_token)
@@ -47,4 +50,9 @@ class TwiCastingOAuth:
         if pathlib.Path(self._local_token_path).is_file():
             return True
         return False
+    
+    def delete_token(self):
+        if self.exists_token():
+            os.remove(self._local_token_path)
+        
     

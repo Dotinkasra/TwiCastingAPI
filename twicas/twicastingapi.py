@@ -2,6 +2,8 @@ from twicas.models.user import User
 from twicas.models.movie import Movie
 from twicas.models.comment import Comment
 from twicas.oauth import TwiCastingOAuth
+from twicas.module import TwiCastingModule
+from twicas.errors.twicasting_exceptions import TwicastingException
 
 import requests
 from typing import Tuple
@@ -22,16 +24,24 @@ class TwiCastingAPI:
         code = input("上記リンクを開きCODE入力")
         return self._twicasting_oauth.fetch_authorize_token(code)
     
+    def reset_token(self):
+        self._twicasting_oauth.delete_token()
+        try:
+            self._token = self._do_oauth()
+        except TwicastingException as e:
+            print(e)
+            exit() 
+    
     def get_user_info(self, user_id: str) -> User:
         url = f"https://apiv2.twitcasting.tv/users/{user_id}"
         response = requests.get(url, headers=self._request_header).json()
-
+        TwiCastingModule.response_validation(response)
         return User(**response["user"])
     
     def get_movie_info(self, movie_id: str) -> Movie:
         url = f"https://apiv2.twitcasting.tv/movies/{movie_id}"
         response = requests.get(url, headers=self._request_header).json()
-
+        TwiCastingModule.response_validation(response)
         return Movie(
             tags=response["tags"],
             broadcaster=User(**response["broadcaster"]),
@@ -41,7 +51,7 @@ class TwiCastingAPI:
     def get_movies_by_user(self, user_id: str, offset: int = 0, limit: int = 20, slice_id: str = None) -> list[Movie]:
         url = f"https://apiv2.twitcasting.tv/users/{user_id}/movies"
         response = requests.get(url, headers=self._request_header, params={"offset":offset, "limit": limit, "slice_id": slice_id}).json()
-
+        TwiCastingModule.response_validation(response)
         return [Movie(
             broadcaster=None,
             tags=None,
@@ -51,7 +61,7 @@ class TwiCastingAPI:
     def get_current_live(self, user_id: str) -> Movie | None:
         url = f"https://apiv2.twitcasting.tv/users/{user_id}/current_live"
         response = requests.get(url, headers=self._request_header).json()
-
+        TwiCastingModule.response_validation(response)
         if response["live"] is None:
             return None
 
@@ -64,7 +74,7 @@ class TwiCastingAPI:
     def get_comments(self, movie_id: str, offset: int = 0, limit: int = 10, slice_id: str = None) -> Tuple[int, list[Comment]]:
         url = f"https://apiv2.twitcasting.tv/movies/{movie_id}/comments"
         response = requests.get(url, headers=self._request_header, params={"offset":offset, "limit": limit, "slice_id": slice_id}).json()
-
+        TwiCastingModule.response_validation(response)
         return (
             response["all_count"],
             [Comment(
