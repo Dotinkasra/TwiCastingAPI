@@ -9,7 +9,7 @@ class TwiCastingOAuth:
         self._client_secret = client_secret
         self._redirect_uri = redirect_uri
         self._session = OAuth2Session(self._client_id)
-        self._local_token_path = "./data/twicasting_token"
+        self._local_token_path = "./.data/twicasting_token"
 
     def fetch_authorize_endpoint_url(self) -> str:
         os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
@@ -35,7 +35,7 @@ class TwiCastingOAuth:
 
     def save_token(self, token: TwiCastingAccessToken):
         if not os.path.exists(self._local_token_path):
-            os.mkdir("./data")
+            os.mkdir("./.data")
         with open(self._local_token_path, 'wb') as f:
             pickle.dump(token, f, protocol=5)
 
