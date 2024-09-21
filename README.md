@@ -6,7 +6,8 @@ $ pip install git+https://github.com/Dotinkasra/TwiCastingAPI
 ```
 
 ```python
-from twicas import TwiCastingAPI, TwiCastingUserInfo, TwiCastingMovieInfo
+from twicas import TwiCastingAPI
+from twicas.models import User, Movie, Comment
 
 tc = TwiCastingAPI(
     "Your ClientID",
@@ -25,18 +26,33 @@ class TwiCastingAPI(
 ```
 
 ### Methods
+Basically, all methods and models are based on the following official API documentation.
+Please refer to the official API document for detailed return value and argument contents.  
+**[official API documents](https://apiv2-doc.twitcasting.tv/)**
 ```python
-def get_user_info(self, user_id: str) -> TwiCastingUserInfo
+def get_user_info(self, user_id: str) -> User
 ```
 
 ```python
-def get_movie_info(self, movie_id: str) -> TwiCastingMovieInfo
+def get_movie_info(self, movie_id: str) -> Movie
+```
+
+```python
+def get_movies_by_user(self, user_id: str, offset: int = 0, limit: int = 20, slice_id: str = None) -> list[Movie]
+```
+
+```python
+def get_current_live(self, user_id: str) -> Movie | None
+```
+
+```python
+def get_comments(self, movie_id: str, offset: int = 0, limit: int = 10, slice_id: str = None) -> Tuple[int, list[Comment]]
 ```
 
 ## DataClass
 ```python
 @dataclass
-class TwiCastingUserInfo():
+class User():
     id: str
     screen_id: str
     name: str
@@ -52,7 +68,7 @@ class TwiCastingUserInfo():
 
 ```python
 @dataclass
-class TwiCastingMovieInfo():
+class Movie():
     id: str
     user_id: str
     title: str
@@ -76,5 +92,14 @@ class TwiCastingMovieInfo():
     hls_url: str | None
     broadcaster: TwiCastingUserInfo
     tags: list[str]
+```
+
+```python
+@dataclass
+class Comment():
+    id: str
+    message: str
+    from_user: User
+    created: int
 ```
 
