@@ -35,3 +35,26 @@ class TwiCastingAPI:
             broadcaster=TwiCastingUserInfo(**response["broadcaster"]),
             **response["movie"]
         )
+    
+    def get_movies_by_user(self, user_id: str, offset: int = 0, limit: int = 20, slice_id: str = None) -> list[TwiCastingMovieInfo]:
+        url = f"https://apiv2.twitcasting.tv/users/{user_id}/movies"
+        response = requests.get(url, headers=self._request_header, params={"offset":offset, "limit": limit, "slice_id": slice_id}).json()
+
+        return [TwiCastingMovieInfo(
+            broadcaster=None,
+            tags=None,
+            **movie
+        ) for movie in response["movies"]]
+    
+    def get_current_live(self, user_id: str) -> TwiCastingMovieInfo | None:
+        url = f"https://apiv2.twitcasting.tv/users/{user_id}/current_live"
+        response = requests.get(url, headers=self._request_header).json()
+
+        if response["live"] is None:
+            return None
+
+        return TwiCastingMovieInfo(
+            tags=response["tags"],
+            broadcaster=TwiCastingUserInfo(**response["broadcaster"]),
+            **response["movie"]
+        )
