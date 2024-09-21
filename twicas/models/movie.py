@@ -24,5 +24,5 @@ class TwiCastingMovieInfo():
     current_view_count: int
     total_view_count: int
     hls_url: str | None
-    broadcaster: TwiCastingUserInfo
-    tags: list[str]
+    broadcaster: TwiCastingUserInfo | None
+    tags: list[str] | None
