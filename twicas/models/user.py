@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class TwiCastingUserInfo():
+class User():
     id: str
     screen_id: str
     name: str

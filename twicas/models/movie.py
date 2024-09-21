@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from twicas.models.user import TwiCastingUserInfo
+from twicas.models.user import User
 
 @dataclass
-class TwiCastingMovieInfo():
+class Movie():
     id: str
     user_id: str
     title: str
@@ -24,5 +24,5 @@ class TwiCastingMovieInfo():
     current_view_count: int
     total_view_count: int
     hls_url: str | None
-    broadcaster: TwiCastingUserInfo | None
+    broadcaster: User | None
     tags: list[str] | None

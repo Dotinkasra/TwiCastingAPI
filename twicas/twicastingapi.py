@@ -1,5 +1,5 @@
-from twicas.models.user import TwiCastingUserInfo
-from twicas.models.movie import TwiCastingMovieInfo
+from twicas.models.user import User
+from twicas.models.movie import Movie
 from twicas.oauth import TwiCastingOAuth
 
 import requests
@@ -20,41 +20,41 @@ class TwiCastingAPI:
         code = input("上記リンクを開きCODE入力")
         return self._twicasting_oauth.fetch_authorize_token(code)
     
-    def get_user_info(self, user_id: str) -> TwiCastingUserInfo:
+    def get_user_info(self, user_id: str) -> User:
         url = f"https://apiv2.twitcasting.tv/users/{user_id}"
         response = requests.get(url, headers=self._request_header).json()
 
-        return TwiCastingUserInfo(**response["user"])
+        return User(**response["user"])
     
-    def get_movie_info(self, movie_id: str) -> TwiCastingMovieInfo:
+    def get_movie_info(self, movie_id: str) -> Movie:
         url = f"https://apiv2.twitcasting.tv/movies/{movie_id}"
         response = requests.get(url, headers=self._request_header).json()
 
-        return TwiCastingMovieInfo(
+        return Movie(
             tags=response["tags"],
-            broadcaster=TwiCastingUserInfo(**response["broadcaster"]),
+            broadcaster=User(**response["broadcaster"]),
             **response["movie"]
         )
     
-    def get_movies_by_user(self, user_id: str, offset: int = 0, limit: int = 20, slice_id: str = None) -> list[TwiCastingMovieInfo]:
+    def get_movies_by_user(self, user_id: str, offset: int = 0, limit: int = 20, slice_id: str = None) -> list[Movie]:
         url = f"https://apiv2.twitcasting.tv/users/{user_id}/movies"
         response = requests.get(url, headers=self._request_header, params={"offset":offset, "limit": limit, "slice_id": slice_id}).json()
 
-        return [TwiCastingMovieInfo(
+        return [Movie(
             broadcaster=None,
             tags=None,
             **movie
         ) for movie in response["movies"]]
     
-    def get_current_live(self, user_id: str) -> TwiCastingMovieInfo | None:
+    def get_current_live(self, user_id: str) -> Movie | None:
         url = f"https://apiv2.twitcasting.tv/users/{user_id}/current_live"
         response = requests.get(url, headers=self._request_header).json()
 
         if response["live"] is None:
             return None
 
-        return TwiCastingMovieInfo(
+        return Movie(
             tags=response["tags"],
-            broadcaster=TwiCastingUserInfo(**response["broadcaster"]),
+            broadcaster=User(**response["broadcaster"]),
             **response["movie"]
         )
