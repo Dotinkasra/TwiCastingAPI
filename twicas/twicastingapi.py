@@ -1,8 +1,10 @@
 from twicas.models.user import User
 from twicas.models.movie import Movie
+from twicas.models.comment import Comment
 from twicas.oauth import TwiCastingOAuth
 
 import requests
+from typing import Tuple
 
 class TwiCastingAPI:
     def __init__(self, client_id: str, client_secret: str, redirect_uri: str) -> None:
@@ -57,4 +59,18 @@ class TwiCastingAPI:
             tags=response["tags"],
             broadcaster=User(**response["broadcaster"]),
             **response["movie"]
+        )
+    
+    def get_comments(self, movie_id: str, offset: int = 0, limit: int = 10, slice_id: str = None) -> Tuple[int, list[Comment]]:
+        url = f"https://apiv2.twitcasting.tv/movies/{movie_id}/comments"
+        response = requests.get(url, headers=self._request_header, params={"offset":offset, "limit": limit, "slice_id": slice_id}).json()
+
+        return (
+            response["all_count"],
+            [Comment(
+                id=comment["id"],
+                message=comment["message"],
+                from_user=User(**comment["from_user"]),
+                created=comment["created"],
+            ) for comment in response["comments"]]
         )
