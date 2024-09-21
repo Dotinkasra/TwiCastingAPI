@@ -25,7 +25,6 @@ class TwiCastingAPI:
             self._token = self._do_oauth()
         except TwicastingException as e:
             print(e)
-            
 
     def _twicas_get_request(self, url: str, params: dict = None) -> dict:
         header = {
