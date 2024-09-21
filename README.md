@@ -14,6 +14,9 @@ tc = TwiCastingAPI(
     "Your ClientSecret",
     "Your Callback URL"
 )
+# Fetch user info
+user_info = tc.get_user_info("user_id")
+print(user_info.name)
 ```
 
 ## Classes
