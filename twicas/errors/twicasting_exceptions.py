@@ -1,9 +1,9 @@
 class TwicastingException(Exception):
     def __init__(self, status_code: int, msg: str, description: str):
-        self.msg = msg
         self.status_code = status_code
+        self.msg = msg
         self.description = description
-        super().__init__(self.status_code, self.msg)
+        super().__init__(self.status_code, self.msg, self.description)
 
     def __str__(self) -> str:
         return f"{self.status_code}: {self.msg}\n{self.description}"
