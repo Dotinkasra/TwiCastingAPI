@@ -1,2 +1,2 @@
-from twicas.twicastingapi import *
+from twicas.twicastingapi import TwiCastingAPI
 
