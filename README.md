@@ -157,3 +157,6 @@ class NotFoundException(TwicastingException):
 class InternalServerError(TwicastingException):
     """Internal Server Error (code: 500)"""
 ```
+
+## License
+MIT
